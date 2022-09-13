@@ -1,0 +1,22 @@
+{
+  "name": "graphql-filter-to-dynamodb-expression",
+  "version": "1.0.1",
+  "description": "create dynamodb filter expression based on graphql json query filter",
+  "main": "index.js",
+  "scripts": {
+    "example-test": "node example.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/danieljse/graphql-filter-to-dynamodb-expression.git"
+  },
+  "author": "Daniel Davila",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/danieljse/graphql-filter-to-dynamodb-expression/issues"
+  },
+  "homepage": "https://github.com/danieljse/graphql-filter-to-dynamodb-expression#readme",
+  "devDependencies": {
+    "standard": "^17.0.0"
+  }
+}
