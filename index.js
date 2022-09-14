@@ -11,19 +11,17 @@ function countLogicKeysSubTree (logicTargetTree) {
 
 const acceptedTypeFields = ['eq', 'ne', 'ge', 'gt', 'le', 'lt', 'attributeExists', 'attributeType', 'beginsWith', 'contains', 'notContains']
 
-const filterExpressionStruct = {
-  FilterExpression: '',
-  ExpressionAttributeNames: {},
-  ExpressionAttributeValues: {},
-  logicIndex: 0,
-  logicKeyNameCounter: 0,
-  isKeyNameLogic: false,
-  logicName: '',
-  logicKeysSubTreeLength: 0,
-  ExpressionAttributeNamesString: '',
-  ExpressionAttributeValueNamesString: '',
-  doneWithExpression: false
-}
+let FilterExpression = ''
+const ExpressionAttributeNames = {}
+const ExpressionAttributeValues = {}
+let logicIndex = 0
+let logicKeyNameCounter = 0
+let isKeyNameLogic = false
+let logicName = ''
+let logicKeysSubTreeLength = 0
+let ExpressionAttributeNamesString = ''
+let ExpressionAttributeValueNamesString = ''
+let doneWithExpression = false
 
 const grphqlToDynamoDBConditionExpression = (targetTree, lastkey) => {
   if (typeof targetTree === 'object') {
@@ -32,60 +30,60 @@ const grphqlToDynamoDBConditionExpression = (targetTree, lastkey) => {
     branchKeys.forEach(branchKeyName => {
       switch (branchKeyName) {
         case 'eq':{
-          const eqValueNAme = filterExpressionStruct.isKeyNameLogic ? `:${filterExpressionStruct.logicName}_${filterExpressionStruct.logicKeyNameCounter}_${filterExpressionStruct.logicIndex}_${filterExpressionStruct.ExpressionAttributeValueNamesString}_${branchKeyName}` : `:${filterExpressionStruct.ExpressionAttributeValueNamesString}_${branchKeyName}`
-          filterExpressionStruct.FilterExpression = `${(filterExpressionStruct.FilterExpression.length === 0 || (filterExpressionStruct.logicIndex === 0 && filterExpressionStruct.isKeyNameLogic)) ? `${filterExpressionStruct.FilterExpression}` : `${filterExpressionStruct.FilterExpression} AND`} (#${filterExpressionStruct.ExpressionAttributeNamesString} = ${eqValueNAme})`
-          filterExpressionStruct.ExpressionAttributeValues[eqValueNAme] = targetTree.eq
-          filterExpressionStruct.doneWithExpression = true
+          const eqValueNAme = isKeyNameLogic ? `:${logicName}_${logicKeyNameCounter}_${logicIndex}_${ExpressionAttributeValueNamesString}_${branchKeyName}` : `:${ExpressionAttributeValueNamesString}_${branchKeyName}`
+          FilterExpression = `${(FilterExpression.length === 0 || (logicIndex === 0 && isKeyNameLogic)) ? `${FilterExpression}` : `${FilterExpression} AND`} (#${ExpressionAttributeNamesString} = ${eqValueNAme})`
+          ExpressionAttributeValues[eqValueNAme] = targetTree.eq
+          doneWithExpression = true
           break
         }
         case 'ne':{
-          const eqValueNAme = filterExpressionStruct.isKeyNameLogic ? `:${filterExpressionStruct.logicName}_${filterExpressionStruct.logicKeyNameCounter}_${filterExpressionStruct.logicIndex}_${filterExpressionStruct.ExpressionAttributeValueNamesString}_${branchKeyName}` : `:${filterExpressionStruct.ExpressionAttributeValueNamesString}_${branchKeyName}`
-          filterExpressionStruct.FilterExpression = `${(filterExpressionStruct.FilterExpression.length === 0 || (filterExpressionStruct.logicIndex === 0 && filterExpressionStruct.isKeyNameLogic)) ? `${filterExpressionStruct.FilterExpression}` : `${filterExpressionStruct.FilterExpression} AND`} (#${filterExpressionStruct.ExpressionAttributeNamesString} <> ${eqValueNAme})`
-          filterExpressionStruct.ExpressionAttributeValues[eqValueNAme] = targetTree.ne
-          filterExpressionStruct.doneWithExpression = true
+          const eqValueNAme = isKeyNameLogic ? `:${logicName}_${logicKeyNameCounter}_${logicIndex}_${ExpressionAttributeValueNamesString}_${branchKeyName}` : `:${ExpressionAttributeValueNamesString}_${branchKeyName}`
+          FilterExpression = `${(FilterExpression.length === 0 || (logicIndex === 0 && isKeyNameLogic)) ? `${FilterExpression}` : `${FilterExpression} AND`} (#${ExpressionAttributeNamesString} <> ${eqValueNAme})`
+          ExpressionAttributeValues[eqValueNAme] = targetTree.ne
+          doneWithExpression = true
           break
         }
         case 'ge':{
-          const eqValueNAme = filterExpressionStruct.isKeyNameLogic ? `:${filterExpressionStruct.logicName}_${filterExpressionStruct.logicKeyNameCounter}_${filterExpressionStruct.logicIndex}_${filterExpressionStruct.ExpressionAttributeValueNamesString}_${branchKeyName}` : `:${filterExpressionStruct.ExpressionAttributeValueNamesString}_${branchKeyName}`
-          filterExpressionStruct.FilterExpression = `${(filterExpressionStruct.FilterExpression.length === 0 || (filterExpressionStruct.logicIndex === 0 && filterExpressionStruct.isKeyNameLogic)) ? `${filterExpressionStruct.FilterExpression}` : `${filterExpressionStruct.FilterExpression} AND`} (#${filterExpressionStruct.ExpressionAttributeNamesString} >= ${eqValueNAme})`
-          filterExpressionStruct.ExpressionAttributeValues[eqValueNAme] = targetTree.ge
-          filterExpressionStruct.doneWithExpression = true
+          const eqValueNAme = isKeyNameLogic ? `:${logicName}_${logicKeyNameCounter}_${logicIndex}_${ExpressionAttributeValueNamesString}_${branchKeyName}` : `:${ExpressionAttributeValueNamesString}_${branchKeyName}`
+          FilterExpression = `${(FilterExpression.length === 0 || (logicIndex === 0 && isKeyNameLogic)) ? `${FilterExpression}` : `${FilterExpression} AND`} (#${ExpressionAttributeNamesString} >= ${eqValueNAme})`
+          ExpressionAttributeValues[eqValueNAme] = targetTree.ge
+          doneWithExpression = true
           break
         }
         case 'gt':{
-          const eqValueNAme = filterExpressionStruct.isKeyNameLogic ? `:${filterExpressionStruct.logicName}_${filterExpressionStruct.logicKeyNameCounter}_${filterExpressionStruct.logicIndex}_${filterExpressionStruct.ExpressionAttributeValueNamesString}_${branchKeyName}` : `:${filterExpressionStruct.ExpressionAttributeValueNamesString}_${branchKeyName}`
-          filterExpressionStruct.FilterExpression = `${(filterExpressionStruct.FilterExpression.length === 0 || (filterExpressionStruct.logicIndex === 0 && filterExpressionStruct.isKeyNameLogic)) ? `${filterExpressionStruct.FilterExpression}` : `${filterExpressionStruct.FilterExpression} AND`} (#${filterExpressionStruct.ExpressionAttributeNamesString} > ${eqValueNAme})`
-          filterExpressionStruct.ExpressionAttributeValues[eqValueNAme] = targetTree.gt
-          filterExpressionStruct.doneWithExpression = true
+          const eqValueNAme = isKeyNameLogic ? `:${logicName}_${logicKeyNameCounter}_${logicIndex}_${ExpressionAttributeValueNamesString}_${branchKeyName}` : `:${ExpressionAttributeValueNamesString}_${branchKeyName}`
+          FilterExpression = `${(FilterExpression.length === 0 || (logicIndex === 0 && isKeyNameLogic)) ? `${FilterExpression}` : `${FilterExpression} AND`} (#${ExpressionAttributeNamesString} > ${eqValueNAme})`
+          ExpressionAttributeValues[eqValueNAme] = targetTree.gt
+          doneWithExpression = true
           break
         }
         case 'le':{
-          const eqValueNAme = filterExpressionStruct.isKeyNameLogic ? `:${filterExpressionStruct.logicName}_${filterExpressionStruct.logicKeyNameCounter}_${filterExpressionStruct.logicIndex}_${filterExpressionStruct.ExpressionAttributeValueNamesString}_${branchKeyName}` : `:${filterExpressionStruct.ExpressionAttributeValueNamesString}_${branchKeyName}`
-          filterExpressionStruct.FilterExpression = `${(filterExpressionStruct.FilterExpression.length === 0 || (filterExpressionStruct.logicIndex === 0 && filterExpressionStruct.isKeyNameLogic)) ? `${filterExpressionStruct.FilterExpression}` : `${filterExpressionStruct.FilterExpression} AND`} (#${filterExpressionStruct.ExpressionAttributeNamesString} <= ${eqValueNAme})`
-          filterExpressionStruct.ExpressionAttributeValues[eqValueNAme] = targetTree.le
-          filterExpressionStruct.doneWithExpression = true
+          const eqValueNAme = isKeyNameLogic ? `:${logicName}_${logicKeyNameCounter}_${logicIndex}_${ExpressionAttributeValueNamesString}_${branchKeyName}` : `:${ExpressionAttributeValueNamesString}_${branchKeyName}`
+          FilterExpression = `${(FilterExpression.length === 0 || (logicIndex === 0 && isKeyNameLogic)) ? `${FilterExpression}` : `${FilterExpression} AND`} (#${ExpressionAttributeNamesString} <= ${eqValueNAme})`
+          ExpressionAttributeValues[eqValueNAme] = targetTree.le
+          doneWithExpression = true
           break
         }
         case 'lt':{
-          const eqValueNAme = filterExpressionStruct.isKeyNameLogic ? `:${filterExpressionStruct.logicName}_${filterExpressionStruct.logicKeyNameCounter}_${filterExpressionStruct.logicIndex}_${filterExpressionStruct.ExpressionAttributeValueNamesString}_${branchKeyName}` : `:${filterExpressionStruct.ExpressionAttributeValueNamesString}_${branchKeyName}`
-          filterExpressionStruct.FilterExpression = `${(filterExpressionStruct.FilterExpression.length === 0 || (filterExpressionStruct.logicIndex === 0 && filterExpressionStruct.isKeyNameLogic)) ? `${filterExpressionStruct.FilterExpression}` : `${filterExpressionStruct.FilterExpression} AND`} (#${filterExpressionStruct.ExpressionAttributeNamesString} < ${eqValueNAme})`
-          filterExpressionStruct.ExpressionAttributeValues[eqValueNAme] = targetTree.lt
-          filterExpressionStruct.doneWithExpression = true
+          const eqValueNAme = isKeyNameLogic ? `:${logicName}_${logicKeyNameCounter}_${logicIndex}_${ExpressionAttributeValueNamesString}_${branchKeyName}` : `:${ExpressionAttributeValueNamesString}_${branchKeyName}`
+          FilterExpression = `${(FilterExpression.length === 0 || (logicIndex === 0 && isKeyNameLogic)) ? `${FilterExpression}` : `${FilterExpression} AND`} (#${ExpressionAttributeNamesString} < ${eqValueNAme})`
+          ExpressionAttributeValues[eqValueNAme] = targetTree.lt
+          doneWithExpression = true
           break
         }
         case 'attributeExists' :{
           if (targetTree.attributeExists === 'true') {
-            filterExpressionStruct.FilterExpression = `${(filterExpressionStruct.FilterExpression.length === 0 || (filterExpressionStruct.logicIndex === 0 && filterExpressionStruct.isKeyNameLogic)) ? `${filterExpressionStruct.FilterExpression}` : `${filterExpressionStruct.FilterExpression} AND`} (attribute_exists(#${filterExpressionStruct.ExpressionAttributeNamesString}))`
+            FilterExpression = `${(FilterExpression.length === 0 || (logicIndex === 0 && isKeyNameLogic)) ? `${FilterExpression}` : `${FilterExpression} AND`} (attribute_exists(#${ExpressionAttributeNamesString}))`
           } else {
-            filterExpressionStruct.FilterExpression = `${(filterExpressionStruct.FilterExpression.length === 0 || (filterExpressionStruct.logicIndex === 0 && filterExpressionStruct.isKeyNameLogic)) ? `${filterExpressionStruct.FilterExpression}` : `${filterExpressionStruct.FilterExpression} AND`} (attribute_not_exists(#${filterExpressionStruct.ExpressionAttributeNamesString}))`
+            FilterExpression = `${(FilterExpression.length === 0 || (logicIndex === 0 && isKeyNameLogic)) ? `${FilterExpression}` : `${FilterExpression} AND`} (attribute_not_exists(#${ExpressionAttributeNamesString}))`
           }
-          filterExpressionStruct.doneWithExpression = true
+          doneWithExpression = true
           break
         }
         case 'attributeType':{
-          const eqValueNAme = filterExpressionStruct.isKeyNameLogic ? `:${filterExpressionStruct.logicName}_${filterExpressionStruct.logicKeyNameCounter}_${filterExpressionStruct.logicIndex}_${filterExpressionStruct.ExpressionAttributeValueNamesString}_${branchKeyName}` : `:${filterExpressionStruct.ExpressionAttributeValueNamesString}_${branchKeyName}`
+          const eqValueNAme = isKeyNameLogic ? `:${logicName}_${logicKeyNameCounter}_${logicIndex}_${ExpressionAttributeValueNamesString}_${branchKeyName}` : `:${ExpressionAttributeValueNamesString}_${branchKeyName}`
 
-          filterExpressionStruct.FilterExpression = `${(filterExpressionStruct.FilterExpression.length === 0 || (filterExpressionStruct.logicIndex === 0 && filterExpressionStruct.isKeyNameLogic)) ? `${filterExpressionStruct.FilterExpression}` : `${filterExpressionStruct.FilterExpression} AND`} (attribute_type(#${filterExpressionStruct.ExpressionAttributeNamesString}, ${eqValueNAme}))`
+          FilterExpression = `${(FilterExpression.length === 0 || (logicIndex === 0 && isKeyNameLogic)) ? `${FilterExpression}` : `${FilterExpression} AND`} (attribute_type(#${ExpressionAttributeNamesString}, ${eqValueNAme}))`
 
           let attributeType
           switch (targetTree.attributeType) {
@@ -132,75 +130,73 @@ const grphqlToDynamoDBConditionExpression = (targetTree, lastkey) => {
             default:
               break
           }
-          filterExpressionStruct.ExpressionAttributeValues[eqValueNAme] = attributeType
-          filterExpressionStruct.doneWithExpression = true
+          ExpressionAttributeValues[eqValueNAme] = attributeType
+          doneWithExpression = true
           break
         }
         case 'beginsWith' : {
-          const eqValueNAme = filterExpressionStruct.isKeyNameLogic ? `:${filterExpressionStruct.logicName}_${filterExpressionStruct.logicKeyNameCounter}_${filterExpressionStruct.logicIndex}_${filterExpressionStruct.ExpressionAttributeValueNamesString}_${branchKeyName}` : `:${filterExpressionStruct.ExpressionAttributeValueNamesString}_${branchKeyName}`
-          filterExpressionStruct.FilterExpression = `${(filterExpressionStruct.FilterExpression.length === 0 || (filterExpressionStruct.logicIndex === 0 && filterExpressionStruct.isKeyNameLogic)) ? `${filterExpressionStruct.FilterExpression}` : `${filterExpressionStruct.FilterExpression} AND`} (begins_with(#${filterExpressionStruct.ExpressionAttributeNamesString}, ${eqValueNAme}))`
-          filterExpressionStruct.ExpressionAttributeValues[eqValueNAme] = targetTree.beginsWith
-          filterExpressionStruct.doneWithExpression = true
+          const eqValueNAme = isKeyNameLogic ? `:${logicName}_${logicKeyNameCounter}_${logicIndex}_${ExpressionAttributeValueNamesString}_${branchKeyName}` : `:${ExpressionAttributeValueNamesString}_${branchKeyName}`
+          FilterExpression = `${(FilterExpression.length === 0 || (logicIndex === 0 && isKeyNameLogic)) ? `${FilterExpression}` : `${FilterExpression} AND`} (begins_with(#${ExpressionAttributeNamesString}, ${eqValueNAme}))`
+          ExpressionAttributeValues[eqValueNAme] = targetTree.beginsWith
+          doneWithExpression = true
           break
         }
         case 'contains' :{
-          const eqValueNAme = filterExpressionStruct.isKeyNameLogic ? `:${filterExpressionStruct.logicName}_${filterExpressionStruct.logicKeyNameCounter}_${filterExpressionStruct.logicIndex}_${filterExpressionStruct.ExpressionAttributeValueNamesString}_${branchKeyName}` : `:${filterExpressionStruct.ExpressionAttributeValueNamesString}_${branchKeyName}`
-          filterExpressionStruct.FilterExpression = `${(filterExpressionStruct.FilterExpression.length === 0 || (filterExpressionStruct.logicIndex === 0 && filterExpressionStruct.isKeyNameLogic)) ? `${filterExpressionStruct.FilterExpression}` : `${filterExpressionStruct.FilterExpression} AND`} (contains(#${filterExpressionStruct.ExpressionAttributeNamesString}, ${eqValueNAme}))`
-          filterExpressionStruct.ExpressionAttributeValues[eqValueNAme] = targetTree.contains
-          filterExpressionStruct.doneWithExpression = true
+          const eqValueNAme = isKeyNameLogic ? `:${logicName}_${logicKeyNameCounter}_${logicIndex}_${ExpressionAttributeValueNamesString}_${branchKeyName}` : `:${ExpressionAttributeValueNamesString}_${branchKeyName}`
+          FilterExpression = `${(FilterExpression.length === 0 || (logicIndex === 0 && isKeyNameLogic)) ? `${FilterExpression}` : `${FilterExpression} AND`} (contains(#${ExpressionAttributeNamesString}, ${eqValueNAme}))`
+          ExpressionAttributeValues[eqValueNAme] = targetTree.contains
+          doneWithExpression = true
           break
         }
         case 'notContains' :{
-          const eqValueNAme = filterExpressionStruct.isKeyNameLogic ? `:${filterExpressionStruct.logicName}_${filterExpressionStruct.logicKeyNameCounter}_${filterExpressionStruct.logicIndex}_${filterExpressionStruct.ExpressionAttributeValueNamesString}_${branchKeyName}` : `:${filterExpressionStruct.ExpressionAttributeValueNamesString}_${branchKeyName}`
-          filterExpressionStruct.FilterExpression = `${(filterExpressionStruct.FilterExpression.length === 0 || (filterExpressionStruct.logicIndex === 0 && filterExpressionStruct.isKeyNameLogic)) ? `${filterExpressionStruct.FilterExpression}` : `${filterExpressionStruct.FilterExpression} AND`} (NOT contains(#${filterExpressionStruct.ExpressionAttributeNamesString}, ${eqValueNAme}))`
-          filterExpressionStruct.ExpressionAttributeValues[eqValueNAme] = targetTree.notContains
-          filterExpressionStruct.doneWithExpression = true
+          const eqValueNAme = isKeyNameLogic ? `:${logicName}_${logicKeyNameCounter}_${logicIndex}_${ExpressionAttributeValueNamesString}_${branchKeyName}` : `:${ExpressionAttributeValueNamesString}_${branchKeyName}`
+          FilterExpression = `${(FilterExpression.length === 0 || (logicIndex === 0 && isKeyNameLogic)) ? `${FilterExpression}` : `${FilterExpression} AND`} (NOT contains(#${ExpressionAttributeNamesString}, ${eqValueNAme}))`
+          ExpressionAttributeValues[eqValueNAme] = targetTree.notContains
+          doneWithExpression = true
           break
         }
         case 'or':{
-          const logicKeysSubTreeLength = countLogicKeysSubTree(targetTree[branchKeyName])
-          filterExpressionStruct.FilterExpression = `${filterExpressionStruct.FilterExpression} OR (`
-          filterExpressionStruct.logicIndex = 0
-          filterExpressionStruct.logicKeysSubTreeLength = logicKeysSubTreeLength
-          filterExpressionStruct.isKeyNameLogic = true
-          filterExpressionStruct.logicKeyNameCounter = filterExpressionStruct.logicKeyNameCounter + 1
-          filterExpressionStruct.logicName = `${branchKeyName}_`
+          logicKeysSubTreeLength = countLogicKeysSubTree(targetTree[branchKeyName])
+          FilterExpression = `${FilterExpression} OR (`
+          logicIndex = 0
+          isKeyNameLogic = true
+          logicKeyNameCounter = logicKeyNameCounter + 1
+          logicName = `${branchKeyName}_`
           break
         }
         case 'and':{
-          const logicKeysSubTreeLength = countLogicKeysSubTree(targetTree[branchKeyName])
-          filterExpressionStruct.FilterExpression = `${filterExpressionStruct.FilterExpression} AND (`
-          filterExpressionStruct.logicIndex = 0
-          filterExpressionStruct.logicKeysSubTreeLength = logicKeysSubTreeLength
-          filterExpressionStruct.isKeyNameLogic = true
-          filterExpressionStruct.logicKeyNameCounter = filterExpressionStruct.logicKeyNameCounter + 1
-          filterExpressionStruct.logicName = `${branchKeyName}_`
+          logicKeysSubTreeLength = countLogicKeysSubTree(targetTree[branchKeyName])
+          FilterExpression = `${FilterExpression} AND (`
+          logicIndex = 0
+          isKeyNameLogic = true
+          logicKeyNameCounter = logicKeyNameCounter + 1
+          logicName = `${branchKeyName}_`
           break
         }
         default:
           if (typeof targetTree[branchKeyName] !== 'object' && !acceptedTypeFields.includes(lastkey)) { // prevents create the filter if the end off branch and no valid keyName was found
-            filterExpressionStruct.doneWithExpression = true
+            doneWithExpression = true
           } else if (lastkey !== 'or' && lastkey !== 'and') {
-            filterExpressionStruct.ExpressionAttributeNamesString = filterExpressionStruct.ExpressionAttributeNamesString ? `${filterExpressionStruct.ExpressionAttributeNamesString}.#${branchKeyName}` : `${filterExpressionStruct.ExpressionAttributeNamesString}${branchKeyName}`
-            filterExpressionStruct.ExpressionAttributeValueNamesString = filterExpressionStruct.ExpressionAttributeValueNamesString ? `${filterExpressionStruct.ExpressionAttributeValueNamesString}_${branchKeyName}` : `${filterExpressionStruct.ExpressionAttributeValueNamesString}${branchKeyName}`
-            filterExpressionStruct.ExpressionAttributeNames[`#${branchKeyName}`] = `${branchKeyName}`
+            ExpressionAttributeNamesString = ExpressionAttributeNamesString ? `${ExpressionAttributeNamesString}.#${branchKeyName}` : `${ExpressionAttributeNamesString}${branchKeyName}`
+            ExpressionAttributeValueNamesString = ExpressionAttributeValueNamesString ? `${ExpressionAttributeValueNamesString}_${branchKeyName}` : `${ExpressionAttributeValueNamesString}${branchKeyName}`
+            ExpressionAttributeNames[`#${branchKeyName}`] = `${branchKeyName}`
           }
           break
       }
 
-      if (filterExpressionStruct.doneWithExpression) {
-        filterExpressionStruct.doneWithExpression = false
-        if (filterExpressionStruct.isKeyNameLogic) {
-          filterExpressionStruct.logicIndex = filterExpressionStruct.logicIndex + 1
+      if (doneWithExpression) {
+        doneWithExpression = false
+        if (isKeyNameLogic) {
+          logicIndex = logicIndex + 1
         }
         if (branchKeys[branchKeys.length - 1] === branchKeyName) {
-          filterExpressionStruct.ExpressionAttributeNamesString = ''
-          filterExpressionStruct.ExpressionAttributeValueNamesString = ''
-          if (filterExpressionStruct.logicIndex >= filterExpressionStruct.logicKeysSubTreeLength && filterExpressionStruct.isKeyNameLogic) {
-            filterExpressionStruct.logicKeysSubTreeLength = 0
-            filterExpressionStruct.isKeyNameLogic = false
-            filterExpressionStruct.FilterExpression = `${filterExpressionStruct.FilterExpression} )`
-            filterExpressionStruct.logicName = ''
+          ExpressionAttributeNamesString = ''
+          ExpressionAttributeValueNamesString = ''
+          if (logicIndex >= logicKeysSubTreeLength && isKeyNameLogic) {
+            logicKeysSubTreeLength = 0
+            isKeyNameLogic = false
+            FilterExpression = `${FilterExpression} )`
+            logicName = ''
           }
         }
       }
@@ -210,9 +206,9 @@ const grphqlToDynamoDBConditionExpression = (targetTree, lastkey) => {
   }
 
   return {
-    FilterExpression: filterExpressionStruct.FilterExpression,
-    ExpressionAttributeNames: filterExpressionStruct.ExpressionAttributeNames,
-    ExpressionAttributeValues: filterExpressionStruct.ExpressionAttributeValues
+    FilterExpression,
+    ExpressionAttributeNames,
+    ExpressionAttributeValues
   }
 }
 
