@@ -61,21 +61,18 @@ filter: {
 
 ```js
 {
-  FilterExpression: ' (#status <> :status_ne) AND (#user.#age <= :user_age_le) OR ( (#exampleId = :or__1_0_exampleId_eq) AND (attribute_type(#users.#user.#name, :or__1_1_users_user_name_attributeType)) ) AND ( (contains(#email, :and__2_0_email_contains)) )',
+  FilterExpression: ' (#status <> :status_ne) AND (#user.#age <= :user_age_le) OR ( (#exampleId = :or__1_0_exampleId_eq) ) AND ( (contains(#email, :and__2_0_email_contains)) )',
   ExpressionAttributeNames: {
     '#status': 'status',
     '#user': 'user',
     '#age': 'age',
     '#exampleId': 'exampleId',
-    '#users': 'users',
-    '#name': 'name',
     '#email': 'email'
   },
   ExpressionAttributeValues: {
     ':status_ne': 'ACTIVE',
     ':user_age_le': '5',
     ':or__1_0_exampleId_eq': '123455',
-    ':or__1_1_users_user_name_attributeType': 'S',
     ':and__2_0_email_contains': '@'
   }
 }
