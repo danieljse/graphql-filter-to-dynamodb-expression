@@ -23,7 +23,7 @@ let ExpressionAttributeNamesString = ''
 let ExpressionAttributeValueNamesString = ''
 let doneWithExpression = false
 
-const grphqlToDynamoDBConditionExpression = (targetTree, lastkey) => {
+const graphqlToDynamoDBConditionExpression = (targetTree, lastkey) => {
   if (typeof targetTree === 'object') {
     const branchKeys = Object.keys(targetTree)
 
@@ -201,7 +201,7 @@ const grphqlToDynamoDBConditionExpression = (targetTree, lastkey) => {
         }
       }
 
-      return grphqlToDynamoDBConditionExpression(targetTree[branchKeyName], branchKeyName)
+      return graphqlToDynamoDBConditionExpression(targetTree[branchKeyName], branchKeyName)
     })
   }
 
@@ -213,5 +213,5 @@ const grphqlToDynamoDBConditionExpression = (targetTree, lastkey) => {
 }
 
 module.exports = {
-  grphqlToDynamoDBConditionExpression
+  graphqlToDynamoDBConditionExpression
 }

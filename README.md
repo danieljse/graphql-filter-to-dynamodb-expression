@@ -20,12 +20,12 @@ $ npm i graphql-filter-to-dynamodb-expression
 <h3>Example</h3>
 
 ```shell
-const { grphqlToDynamoDBConditionExpression } = require('graphql-filter-to-dynamodb-expression')
+const { graphqlToDynamoDBConditionExpression } = require('graphql-filter-to-dynamodb-expression')
 ```
 <h3> Code Demo </h3>
 
 ```shell
-grphqlToDynamoDBConditionExpression(input.filter)
+graphqlToDynamoDBConditionExpression(input.filter)
 ```
 
 <h4>Input</h4>

@@ -1,4 +1,4 @@
-const { grphqlToDynamoDBConditionExpression } = require('../graphql-filter-to-dynamodb-expression') // testing locally
+const { graphqlToDynamoDBConditionExpression } = require('../graphql-filter-to-dynamodb-expression') // testing locally
 
 const filterJson = {
   filter: {
@@ -34,4 +34,4 @@ const filterJson = {
   }
 
 }
-console.log(grphqlToDynamoDBConditionExpression(filterJson.filter))
+console.log(graphqlToDynamoDBConditionExpression(filterJson.filter))
