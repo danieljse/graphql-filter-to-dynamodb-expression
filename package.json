@@ -1,6 +1,6 @@
 {
   "name": "graphql-filter-to-dynamodb-expression",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "create dynamodb filter expression based on graphql json query filter",
   "main": "index.js",
   "scripts": {
