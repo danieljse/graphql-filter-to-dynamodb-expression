@@ -12,8 +12,8 @@ function countLogicKeysSubTree (logicTargetTree) {
 const acceptedTypeFields = ['eq', 'ne', 'ge', 'gt', 'le', 'lt', 'attributeExists', 'attributeType', 'beginsWith', 'contains', 'notContains']
 
 let FilterExpression = ''
-const ExpressionAttributeNames = {}
-const ExpressionAttributeValues = {}
+let ExpressionAttributeNames = {}
+let ExpressionAttributeValues = {}
 let logicIndex = 0
 let logicKeyNameCounter = 0
 let isKeyNameLogic = false
@@ -24,6 +24,20 @@ let ExpressionAttributeValueNamesString = ''
 let doneWithExpression = false
 
 const graphqlToDynamoDBConditionExpression = (targetTree, lastkey) => {
+  if (!lastkey) {
+    FilterExpression = ''
+    ExpressionAttributeNames = {}
+    ExpressionAttributeValues = {}
+    logicIndex = 0
+    logicKeyNameCounter = 0
+    isKeyNameLogic = false
+    logicName = ''
+    logicKeysSubTreeLength = 0
+    ExpressionAttributeNamesString = ''
+    ExpressionAttributeValueNamesString = ''
+    doneWithExpression = false
+  }
+
   if (typeof targetTree === 'object') {
     const branchKeys = Object.keys(targetTree)
 
