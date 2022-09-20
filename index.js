@@ -171,7 +171,7 @@ const graphqlToDynamoDBConditionExpression = (targetTree, lastkey) => {
         }
         case 'or':{
           logicKeysSubTreeLength = countLogicKeysSubTree(targetTree[branchKeyName])
-          FilterExpression = `${FilterExpression} OR (`
+          logicKeysSubTreeLength === 1 ? FilterExpression = `${FilterExpression} OR` : FilterExpression = `${FilterExpression} OR (`
           logicIndex = 0
           isKeyNameLogic = true
           logicKeyNameCounter = logicKeyNameCounter + 1
@@ -180,7 +180,7 @@ const graphqlToDynamoDBConditionExpression = (targetTree, lastkey) => {
         }
         case 'and':{
           logicKeysSubTreeLength = countLogicKeysSubTree(targetTree[branchKeyName])
-          FilterExpression = `${FilterExpression} AND (`
+          logicKeysSubTreeLength === 1 ? FilterExpression = `${FilterExpression} AND` : FilterExpression = `${FilterExpression} AND (`
           logicIndex = 0
           isKeyNameLogic = true
           logicKeyNameCounter = logicKeyNameCounter + 1
@@ -207,9 +207,9 @@ const graphqlToDynamoDBConditionExpression = (targetTree, lastkey) => {
           ExpressionAttributeNamesString = ''
           ExpressionAttributeValueNamesString = ''
           if (logicIndex >= logicKeysSubTreeLength && isKeyNameLogic) {
+            logicKeysSubTreeLength === 1 ? FilterExpression = `${FilterExpression}` : FilterExpression = `${FilterExpression} )`
             logicKeysSubTreeLength = 0
             isKeyNameLogic = false
-            FilterExpression = `${FilterExpression} )`
             logicName = ''
           }
         }
