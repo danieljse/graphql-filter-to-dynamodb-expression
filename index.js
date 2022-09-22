@@ -1,14 +1,3 @@
-
-function countLogicKeysSubTree (logicTargetTree) {
-  let internalTreeKeys = Object.keys(logicTargetTree[0])
-  const logicKeystoRemove = ['and', 'or']
-  internalTreeKeys = internalTreeKeys.filter(function (value) {
-    return logicKeystoRemove.indexOf(value) === -1
-  })
-
-  return internalTreeKeys.length
-}
-
 const acceptedTypeFields = ['eq', 'ne', 'ge', 'gt', 'le', 'lt', 'attributeExists', 'attributeType', 'beginsWith', 'contains', 'notContains']
 
 let FilterExpression = ''
@@ -23,21 +12,17 @@ let ExpressionAttributeNamesString = ''
 let ExpressionAttributeValueNamesString = ''
 let doneWithExpression = false
 
-const graphqlToDynamoDBConditionExpression = (targetTree, lastkey) => {
-  if (!lastkey) {
-    FilterExpression = ''
-    ExpressionAttributeNames = {}
-    ExpressionAttributeValues = {}
-    logicIndex = 0
-    logicKeyNameCounter = 0
-    isKeyNameLogic = false
-    logicName = ''
-    logicKeysSubTreeLength = 0
-    ExpressionAttributeNamesString = ''
-    ExpressionAttributeValueNamesString = ''
-    doneWithExpression = false
-  }
+const countLogicKeysSubTree = (logicTargetTree) => {
+  let internalTreeKeys = Object.keys(logicTargetTree[0])
+  const logicKeystoRemove = ['and', 'or']
+  internalTreeKeys = internalTreeKeys.filter(function (value) {
+    return logicKeystoRemove.indexOf(value) === -1
+  })
 
+  return internalTreeKeys.length
+}
+
+const generateExpression = (targetTree, lastkey) => {
   if (typeof targetTree === 'object') {
     const branchKeys = Object.keys(targetTree)
 
@@ -215,7 +200,7 @@ const graphqlToDynamoDBConditionExpression = (targetTree, lastkey) => {
         }
       }
 
-      return graphqlToDynamoDBConditionExpression(targetTree[branchKeyName], branchKeyName)
+      return generateExpression(targetTree[branchKeyName], branchKeyName)
     })
   }
 
@@ -224,6 +209,22 @@ const graphqlToDynamoDBConditionExpression = (targetTree, lastkey) => {
     ExpressionAttributeNames,
     ExpressionAttributeValues
   }
+}
+
+const graphqlToDynamoDBConditionExpression = (targetTree) => {
+  FilterExpression = ''
+  ExpressionAttributeNames = {}
+  ExpressionAttributeValues = {}
+  logicIndex = 0
+  logicKeyNameCounter = 0
+  isKeyNameLogic = false
+  logicName = ''
+  logicKeysSubTreeLength = 0
+  ExpressionAttributeNamesString = ''
+  ExpressionAttributeValueNamesString = ''
+  doneWithExpression = false
+
+  return generateExpression(targetTree, null)
 }
 
 module.exports = {
